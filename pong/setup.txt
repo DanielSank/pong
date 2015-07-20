@@ -1,0 +1,52 @@
+Set up the virtual environment.
+$ virtualenv env
+$ source ./env/bin/activate
+$ pip install sqlalchemy
+$ pip install alembic
+$ pip install mysql-python
+Do NOT use mysql-connector.
+Also note that this might fail.
+
+$ alembic init alembic
+Only do this if really starting from scratch. We provide the resulting files
+in version control.
+
+In alembic.ini, set a line to
+sqlalchemy.url = 'bogus'
+
+In alembic/env.py add the following sections
+
+# Get the full database url
+import projectname.config as myconfig
+config.set_main_option(
+    'sqlalchemy.url',
+    myconfig.config.get('DB_URL')
+)
+#<snip>
+# Add models' MetaData object for 'autogenerate' support.
+# We assume that pyle/projectname is in the system path
+import projectname.models as models
+target_metadata = models.Base.metadata
+
+Make a lib directory in the project root and symlink it to the virtualenv's
+site-packages.
+
+If mysql-python doesn't install it's probably because
+your version of pip is old. Do this in your virtualenv:
+$ python -m pip install -U pip
+$ pip install -U setuptools
+$ pip install -U virtualenv
+
+Another option (works on Windows) is to download a wheel file and install that.
+
+To set up the database url, make a file called
+config.py which looks like this
+config = {
+    'DB_URL': <database url>
+} 
+
+To make a new migration
+$ alembic revision --autogenerate -m "<message>"
+
+Do the migration
+$ alembic upgrade head

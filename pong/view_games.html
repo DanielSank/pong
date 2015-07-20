@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+  <body>
+    <h1>Ping-pong games</h1>
+    <p></p>
+    <table width="100%">
+      {% for g in games %}
+        <tr>
+          <td>{{ g.playerA }}: {{ g.scoreA }}</td>
+          <td>{{ g.playerB }}: {{ g.scoreB }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+    <p></p>
+    <a href="/games/add">Log new game</a>
+  </body>
+</html>
+{% endautoescape %}

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+  <body>
+    <div>Enter ping pong match</div>
+    <p></p>
+    <form method="POST">
+      <div>Player: {{ form.playerA() }}  Score: {{ form.scoreA() }}</div>
+      <div>Player: {{ form.playerB() }}  Score: {{ form.scoreB() }}</div>
+      <p></p>
+      <input type="submit" value="Submit">
+    </form>
+  </body>
+</html>
+{% endautoescape %}

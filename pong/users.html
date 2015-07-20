@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+  <body>
+    {% for u in users %}
+      <p>{{ u.name }}</p>
+    {% endfor %}
+    <form method="POST">
+      <div>add user: {{ form.username() }}</div>
+    </form>
+  </body>
+</html>
+{% endautoescape %}
