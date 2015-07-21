@@ -39,10 +39,8 @@ class AddGame(wa2.RequestHandler):
 
     def get(self):
         session = Session()
-        usernames = tuple([(u.name, u.name) for u in session.query(models.User).all()])
-        form = forms.AddGame()
-        form.playerA.choices = usernames
-        form.playerB.choices = usernames
+        players = [u.name for u in session.query(models.User).all()]
+        form = forms.AddGame(players)
         template = JINJA_ENVIRONMENT.get_template('add_game.html')
         self.response.write(template.render({'form': form}))
 

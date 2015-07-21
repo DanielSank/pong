@@ -8,24 +8,14 @@ class AddUser(wtf.Form):
 
 class AddGame(wtf.Form):
 
+    def __init__(self, players):
+        super(AddGame, self).__init__()
+        self.playerA.choices = [(p, p) for p in players]
+        self.playerB.choices = [(p, p) for p in players]
+
     playerA = wtf.SelectField()
     playerB = wtf.SelectField()
 
     scoreA = wtf.SelectField(choices=[(i, i) for i in range(22)], coerce=int)
     scoreB = wtf.SelectField(choices=[(i, i) for i in range(22)], coerce=int)
 
-#    player1_score = wtf.SelectField(
-#        choices=[(i, i) for i in range(22)])
-#        validators = [
-#            validators.NumberRange(min=0, message='Score must be positive')])
-
-#    player2_score = wtf.SelectField(
-#        choices=[(i, i) for i in range(22)])
-#        validators = [
-#            validators.NumberRange(min=0, message='Score must be positive')])
-
-
-import models
-import wtforms.ext.sqlalchemy.orm as sqla
-
-# TODO: simpler sqla form
