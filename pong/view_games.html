@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 {% autoescape true %}
 <html>
+  <head>
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  </head>
   <body>
     <h1>Ping-pong games</h1>
     <p></p>
-    <table width="100%">
+    <table width="100%" class="table table-striped">
       {% for g in games %}
         <tr>
           <td>{{ g.playerA }}: {{ g.scoreA }}</td>
@@ -13,7 +16,7 @@
       {% endfor %}
     </table>
     <p></p>
-    <a href="/games/add">Log new game</a>
+    <a href="/games/add" class="btn btn-info">Log new game</a>
   </body>
 </html>
 {% endautoescape %}
