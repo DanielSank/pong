@@ -8,8 +8,8 @@ class AddUser(wtf.Form):
 
 class AddGame(wtf.Form):
 
-    def __init__(self, players):
-        super(AddGame, self).__init__()
+    def __init__(self, formdata=None, players=None):
+        super(AddGame, self).__init__(formdata=formdata)
         self.playerA.choices = [(p, p) for p in players]
         self.playerB.choices = [(p, p) for p in players]
 
