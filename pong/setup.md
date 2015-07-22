@@ -8,7 +8,7 @@
 1. Make a lib directory in the project root and symlink it to the virtualenv's site-packages.
   1. `$ cd PROJECT_ROOT/pong`
   1. `$ mkdir lib`
-  1. `$ ln -s PROJECT_ROOT/env/lib/local/python2.7/site-packages lib`
+  1. `$ ln -s PROJECT_ROOT/env/lib/python2.7/site-packages lib`
 
 1. Install mysql server: `$ sudo apt-get install mysql-server`. When asked for a root password leave it blank and hit enter. You might need to do this more than once.
 
