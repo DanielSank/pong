@@ -19,9 +19,20 @@
   1. `$ pip install mysql-python`
     1. Do NOT use `mysql-connector`.
     1. This step might fail on Windows. If it does, download a wheel and install that.
-  1. Update database tables `$ alembic upgrade head` (needs project on python system path)
+  1. Update database tables: `$ alembic upgrade head` (needs project on python system path)
 
-1. If starting from absolute scratch you need to configure alembic
+1. Install the Google App Engine python SDK:
+  1. Download it from the official site.
+  1. Unpack it and put it somewhere like `~/src/` so that you have e.g. `~/src/google_appengine/`.
+
+1. Run the server
+  1. `$ cd PROJECT_ROOT`
+  1. `$ python ~/src/google_appengine/dev_appserver.py pong`
+  1. You can now use the pong application at `localhost:8080/users` and `localhost:8080/games/view`.
+
+1. To make a new migration do `$ alembic revision --autogenerate -m "<message>"`
+
+1. If starting from absolute scratch (i.e. you did not clone this github repo but are making your own project) you need to configure alembic
   1. `$ alembic init alembic`
   1. In `alembic.ini`, set a line to `sqlalchemy.url = 'bogus'`.
   1. In `alembic/env.py` add the following sections:
@@ -47,5 +58,3 @@
         'DB_URL': <database url>
     } 
     ```
-
-1. To make a new migration do `$ alembic revision --autogenerate -m "<message>"`
