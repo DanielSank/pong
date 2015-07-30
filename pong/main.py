@@ -13,9 +13,9 @@ Session = orm.sessionmaker(bind=engine)
 
 import models as models
 import forms
+import util
 
 
-#from google.appengine.api import users
 import jinja2
 import webapp2 as wa2
 
@@ -28,6 +28,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 
 class ViewGames(wa2.RequestHandler):
+    @util.require_login('/games/view', Session)
     def get(self):
         session = Session()
         games = session.query(models.Game).all()
