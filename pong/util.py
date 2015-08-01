@@ -13,13 +13,12 @@ def require_login(url, sqla_sessionmaker):
         def wrapped(self):
             user = usersapi.get_current_user()
             allowed_usernames = get_allowed_usernames(sqla_sessionmaker())
-            print allowed_usernames
             if user:
                 nickname = user.email().split('@')[0]
                 if nickname in allowed_usernames:
                     func(self)
                 else:
-                    print("User {} not allowed".format(nickname))
+                    # TODO: Deal with unallowed user
                     self.response.write("nope")
             else:
                 return wa2.redirect(usersapi.create_login_url(url))
