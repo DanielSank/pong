@@ -39,6 +39,7 @@ class ViewGames(wa2.RequestHandler):
 
 class AddGame(wa2.RequestHandler):
 
+    @util.require_login('/games/add', Session)
     def get(self):
         session = Session()
         players = [u.name for u in session.query(models.User).all()]
