@@ -98,8 +98,14 @@ class Users(wa2.RequestHandler):
             return wa2.redirect("/users")
 
 
+class Error(wa2.RequestHandler):
+    def get(self):
+        raise Exception("If you see this you're not in production mode")
+
+
 application = wa2.WSGIApplication([
     ('/users', Users),
     ('/games/add', AddGame),
-    ('/games/view', ViewGames)
+    ('/games/view', ViewGames),
+    ('/error', Error)
 ], debug=not util.in_production_mode())
