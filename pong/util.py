@@ -1,3 +1,4 @@
+import os
 import webapp2 as wa2
 import google.appengine.api.users as usersapi
 import models
@@ -24,3 +25,16 @@ def require_login(url, sqla_sessionmaker):
                 return wa2.redirect(usersapi.create_login_url(url))
         return wrapped
     return require_login_decorator
+
+
+def in_production_mode():
+    """Get deployment environment.
+
+    Returns (bool): True if in production mode, false otherwise.
+    """
+    if (os.getenv('SERVER_SOFTWARE') and
+                os.getenv('SERVER_SOFTWARE').startswith('Google App Engine/')):
+        mode = True
+    else:
+        mode = False
+    return mode

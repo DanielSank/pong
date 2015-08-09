@@ -98,4 +98,4 @@ application = wa2.WSGIApplication([
     ('/users', Users),
     ('/games/add', AddGame),
     ('/games/view', ViewGames)
-], debug=True)
+], debug=util.in_production_mode())
