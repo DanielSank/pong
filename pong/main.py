@@ -18,6 +18,7 @@ import util
 
 import jinja2
 import webapp2 as wa2
+import google.appengine.api.users as usersapi
 
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -66,6 +67,7 @@ class AddGame(wa2.RequestHandler):
 
 
 class Users(wa2.RequestHandler):
+    @util.require_login('/users', Session)
     def get(self):
         session = Session()
         users = session.query(models.User).all()
@@ -73,6 +75,7 @@ class Users(wa2.RequestHandler):
         self.response.write(template.render({
             'users': users,
             'form': forms.AddUser(),
+            'logout_url': usersapi.create_logout_url('/users')
         }))
 
     def post(self):
