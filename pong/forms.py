@@ -23,9 +23,18 @@ class AddGame(wtf.Form):
         """Override default validation, checking for sensible game results."""
         if not wtf.Form.validate(self):
             return False
+
         ok = True
         if self.scoreA.data == self.scoreB.data:
             ok = False
+        # Do not accept ties
+
+        if not abs(self.scoreA.data - self.scoreB.data) >= 2:
+            ok = False
+        # Must win by 2
+
         if self.playerA.data == self.playerB.data:
             ok = False
+        # Cannot play against yourself
+
         return ok
