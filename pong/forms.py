@@ -16,8 +16,8 @@ class AddGame(wtf.Form):
     playerA = wtf.SelectField()
     playerB = wtf.SelectField()
 
-    scoreA = wtf.SelectField(choices=[(i, i) for i in range(22)], coerce=int)
-    scoreB = wtf.SelectField(choices=[(i, i) for i in range(22)], coerce=int)
+    scoreA = wtf.IntegerField()
+    scoreB = wtf.IntegerField()
 
     def validate(self):
         """Override default validation, checking for sensible game results."""
