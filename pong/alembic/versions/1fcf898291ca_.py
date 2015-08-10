@@ -1,13 +1,13 @@
-"""initial
+"""empty message
 
-Revision ID: b8444dd2beb
+Revision ID: 1fcf898291ca
 Revises: 
-Create Date: 2015-07-22 01:16:31.523029
+Create Date: 2015-08-10 10:32:14.141678
 
 """
 
 # revision identifiers, used by Alembic.
-revision = 'b8444dd2beb'
+revision = '1fcf898291ca'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -25,12 +25,12 @@ def upgrade():
     op.create_table('games',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('date', sa.Date(), nullable=False),
-    sa.Column('playerA', sa.String(length=24), nullable=True),
-    sa.Column('playerB', sa.String(length=24), nullable=True),
+    sa.Column('playerA_name', sa.String(length=24), nullable=True),
+    sa.Column('playerB_name', sa.String(length=24), nullable=True),
     sa.Column('scoreA', sa.Integer(), nullable=False),
     sa.Column('scoreB', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['playerA'], ['users.name'], ),
-    sa.ForeignKeyConstraint(['playerB'], ['users.name'], ),
+    sa.ForeignKeyConstraint(['playerA_name'], ['users.name'], ),
+    sa.ForeignKeyConstraint(['playerB_name'], ['users.name'], ),
     sa.PrimaryKeyConstraint('id')
     )
     ### end Alembic commands ###

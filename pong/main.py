@@ -65,15 +65,15 @@ class AddGame(wa2.RequestHandler):
             print("FORM VALID")
             session = Session()
             game = models.Game(
-                playerA=form.playerA.data,
-                playerB=form.playerB.data,
+                playerA_name=form.playerA.data,
+                playerB_name=form.playerB.data,
                 scoreA=form.scoreA.data,
                 scoreB=form.scoreB.data,
                 date=datetime.datetime.now())
             session.add(game)
             session.commit()
         else:
-            print("OH NO")
+            print("FORM INVALID")
         return wa2.redirect("/games/view")
 
 
