@@ -1,14 +1,11 @@
-<!DOCTYPE html>
-{% autoescape true %}
-<html>
-  <body>
-    {% for u in users %}
-      <p>{{ u.name }}</p>
-    {% endfor %}
-    <form method="POST">
-      <div>add user: {{ form.username() }}</div>
-    </form>
-    <a href="{{ logout_url }}">logout</a>
-  </body>
-</html>
-{% endautoescape %}
+{% extends "base.html" %}
+{% block content %}
+<table width="100%" class="table table-striped">
+  {% for u in users %}
+    <tr><td>{{ u.name }}</td></tr>
+  {% endfor %}
+</table>
+<form method="POST">
+  <div>add user: {{ form.username() }}</div>
+</form>
+{% endblock %}

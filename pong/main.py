@@ -34,7 +34,12 @@ class ViewGames(wa2.RequestHandler):
         session = Session()
         games = session.query(models.Game).all()
         template = JINJA_ENVIRONMENT.get_template('view_games.html')
-        self.response.write(template.render({'games': games}))
+        self.response.write(
+            template.render(
+                {'games': games,
+                 'logout_url': usersapi.create_logout_url('/games')}
+            )
+        )
 
 
 class AddGame(wa2.RequestHandler):
@@ -45,7 +50,12 @@ class AddGame(wa2.RequestHandler):
         players = [u.name for u in session.query(models.User).all()]
         form = forms.AddGame(formdata=None, players=players)
         template = JINJA_ENVIRONMENT.get_template('add_game.html')
-        self.response.write(template.render({'form': form}))
+        self.response.write(
+            template.render(
+                {'form': form,
+                'logout_url': usersapi.create_logout_url('/games')}
+            )
+        )
 
     def post(self):
         session = Session()
@@ -106,6 +116,7 @@ class Error(wa2.RequestHandler):
 application = wa2.WSGIApplication([
     ('/users', Users),
     ('/games/add', AddGame),
+    ('/games', ViewGames),
     ('/games/view', ViewGames),
     ('/error', Error)
 ], debug=not util.in_production_mode())

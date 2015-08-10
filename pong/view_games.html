@@ -1,22 +1,14 @@
-<!DOCTYPE html>
-{% autoescape true %}
-<html>
-  <head>
-  <link type="text/css" rel="stylesheet" href="/stylesheets/bootstrap-3.3.5-dist/css/bootstrap.min.css"/>
-  </head>
-  <body>
-    <h1>Ping-pong games</h1>
-    <p></p>
-    <table width="100%" class="table table-striped">
-      {% for g in games %}
-        <tr>
-          <td>{{ g.playerA }}: {{ g.scoreA }}</td>
-          <td>{{ g.playerB }}: {{ g.scoreB }}</td>
-        </tr>
-      {% endfor %}
-    </table>
-    <p></p>
-    <a href="/games/add" class="btn btn-info">Log new game</a>
-  </body>
-</html>
-{% endautoescape %}
+{% extends "base.html" %}
+{% block content %}
+<p></p>
+<table width="100%" class="table table-striped">
+  {% for g in games %}
+    <tr>
+      <td>{{ g.playerA }}: {{ g.scoreA }}</td>
+      <td>{{ g.playerB }}: {{ g.scoreB }}</td>
+    </tr>
+  {% endfor %}
+</table>
+<p></p>
+<a href="/games/add" class="btn btn-info">Log new game</a>
+{% endblock %}
