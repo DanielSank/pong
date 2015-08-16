@@ -3,17 +3,17 @@
 <p></p>
 <form method="POST" class="form-horizontal" role="form">
   <div class="form-group">
-    <label class="control-label col-sm-2" for="playerA">Player A</label>
+    <label class="control-label col-sm-2" for="winner">Player A</label>
     <div class="col-sm-10">
-      {{ form.playerA(class_="form-control", id="playerA") }}
-      {{ form.scoreA(class_="form-control", id="scoreA") }}
+      {{ form.winner(class_="form-control", id="winner") }}
+      {{ form.winner_score(class_="form-control", id="winner_score") }}
     </div>
   </div>
   <div class="form-group">
-    <label class="control-label col-sm-2" for="playerB">Player B</label>
+    <label class="control-label col-sm-2" for="loser">Player B</label>
     <div class="col-sm-10">
-      {{ form.playerB(class_="form-control", id="playerB") }}
-      {{ form.scoreB(class_="form-control", id="scoreB") }}
+      {{ form.loser(class_="form-control", id="loser") }}
+      {{ form.loser_score(class_="form-control", id="loser_score") }}
     </div>
   </div>
   <p></p>

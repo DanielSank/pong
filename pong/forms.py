@@ -10,14 +10,14 @@ class AddGame(wtf.Form):
 
     def __init__(self, formdata=None, players=None):
         super(AddGame, self).__init__(formdata=formdata)
-        self.playerA.choices = [(p, p) for p in players]
-        self.playerB.choices = [(p, p) for p in players]
+        self.winner.choices = [(p, p) for p in players]
+        self.loser.choices = [(p, p) for p in players]
 
-    playerA = wtf.SelectField()
-    playerB = wtf.SelectField()
+    winner = wtf.SelectField()
+    loser = wtf.SelectField()
 
-    scoreA = wtf.IntegerField()
-    scoreB = wtf.IntegerField()
+    winner_score = wtf.IntegerField()
+    loser_score = wtf.IntegerField()
 
     def validate(self):
         """Override default validation, checking for sensible game results."""
@@ -25,15 +25,15 @@ class AddGame(wtf.Form):
             return False
 
         ok = True
-        if self.scoreA.data == self.scoreB.data:
+        if self.winner_score.data == self.loser_score.data:
             ok = False
         # Do not accept ties
 
-        if not abs(self.scoreA.data - self.scoreB.data) >= 2:
+        if not self.winner_score.data - self.loser_score.data >= 2:
             ok = False
         # Must win by 2
 
-        if self.playerA.data == self.playerB.data:
+        if self.loser.data == self.winner.data:
             ok = False
         # Cannot play against yourself
 

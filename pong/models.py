@@ -25,11 +25,16 @@ class Game(Base):
 
     id = Column(Integer, primary_key=True)
     date = Column(Date, nullable=False, default=datetime.date)
-    playerA_name = Column(String(USER_NAME_LEN), ForeignKey('users.name'))
-    playerB_name = Column(String(USER_NAME_LEN), ForeignKey('users.name'))
 
-    playerA = relationship("User", foreign_keys=[playerA_name])
-    playerB = relationship("User", foreign_keys=[playerB_name])
+    winner_name = Column(String(USER_NAME_LEN),
+                         ForeignKey('users.name'),
+                         nullable=False)
+    loser_name = Column(String(USER_NAME_LEN),
+                        ForeignKey('users.name'),
+                        nullable=False)
 
-    scoreA = Column(Integer, nullable=False)
-    scoreB = Column(Integer, nullable=False)
+    winner = relationship("User", foreign_keys=[winner_name])
+    loser = relationship("User", foreign_keys=[loser_name])
+
+    winner_score = Column(Integer, nullable=False)
+    loser_score = Column(Integer, nullable=False)

@@ -65,10 +65,10 @@ class AddGame(wa2.RequestHandler):
             print("FORM VALID")
             session = Session()
             game = models.Game(
-                playerA_name=form.playerA.data,
-                playerB_name=form.playerB.data,
-                scoreA=form.scoreA.data,
-                scoreB=form.scoreB.data,
+                winner_name=form.winner.data,
+                loser_name=form.loser.data,
+                winner_score=form.winner_score.data,
+                loser_score=form.loser_score.data,
                 date=datetime.datetime.now())
             session.add(game)
             session.commit()

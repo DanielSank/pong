@@ -4,8 +4,8 @@
 <table width="100%" class="table table-striped">
   {% for g in games %}
     <tr>
-      <td>{{ g.playerA.name }}: {{ g.scoreA }}</td>
-      <td>{{ g.playerB.name }}: {{ g.scoreB }}</td>
+      <td>{{ g.winner.name }}: {{ g.winner_score }}</td>
+      <td>{{ g.loser.name }}: {{ g.loser_score }}</td>
       <td>{{ g.date }}</td>
     </tr>
   {% endfor %}
