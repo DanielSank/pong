@@ -22,8 +22,15 @@
   1. Set up the database url: make a file `PROJECT_ROOT/pong/config.py` which looks like this:
 
     ```
-    config = {
-        'DB_URL': <database url>
+    import util
+    
+    config = {}
+    
+    if util.in_production_mode():
+        instance_name = "google.com:<project name>:<db name>"
+        config['DB_URL'] = "mysql+gaerdbms:///<project name>?instance="+instance_name
+    else:
+        config['DB_URL'] = "mysql://localhost/<database name>
     } 
     ```
 
