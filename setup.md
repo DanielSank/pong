@@ -17,7 +17,7 @@
   1. `$ pip install mysql-python`
     1. Do NOT use `mysql-connector`.
     1. This step might fail on Windows. If it does, download a wheel and install that.
-  1. Update database tables: `$ alembic upgrade head` (needs project on python system path)
+  1. Update database tables: `$ alembic upgrade head`.
 
   1. Set up the database url: make a file `PROJECT_ROOT/pong/config.py` which looks like this:
 
