@@ -6,7 +6,7 @@
   1. `$ mkdir lib`
   1. `$ pip install -t ./lib sqlalchemy wtforms`
   1. `$ pip install alembic`
-  1. `$ add2virtualenv ~/src/pong/pong/lib`
+  1. `$ add2virtualenv PROJECT_ROOT/pong/lib`
 
 1. Install mysql server: `$ sudo apt-get install mysql-server`. When asked for a root password leave it blank and hit enter. You might need to do this more than once.
 
