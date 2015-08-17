@@ -8,27 +8,36 @@
   1. `$ pip install alembic`
   1. `$ add2virtualenv PROJECT_ROOT/pong/lib`
 
-1. Install mysql server: `$ sudo apt-get install mysql-server`. When asked for a root password leave it blank and hit enter. You might need to do this more than once.
+1. Install mysql server: `$ sudo apt-get install mysql-server`.
+We recommend not setting a root password on your local server as this simplifies your development work flow.
+However, if you don't set password don't mysql server listen on open the internet.
+To set up mysql server without a password, when asked for a root password during installation just leave it blank and hit enter.
+The installer may ask several times.
 
-1. Set up the database
+1. Set up the local database
   1. `$ sudo mysql` and then in the mysql shell:
     1. `CREATE DATABASE pong;`
     1. `exit`
   1. `$ pip install mysql-python`
     1. Do NOT use `mysql-connector`.
     1. This step might fail on Windows. If it does, download a wheel and install that.
-  1. Update database tables: `$ alembic upgrade head`.
+  1. Update database tables:
+    1. `$ cd PROJECT_ROOT/pong`
+    1. `$ alembic upgrade head`
 
-  1. Set up the database url: make a file `PROJECT_ROOT/pong/config.py` which looks like this:
+  1. Set up the database url (includes setup for production database). Make a file `PROJECT_ROOT/pong/config.py` which looks like this:
 
     ```
     import util
     
+    PROJECT_NAME = <name of Google App Engine project>
+    DB_NAME = <name of cloud SQL instance on Google App Engine>
+    
     config = {}
     
     if util.in_production_mode():
-        instance_name = "google.com:<project name>:<db name>"
-        config['DB_URL'] = "mysql+gaerdbms:///<project name>?instance="+instance_name
+        instance_name = "google.com:{}:{}".format(PROJECT_NAME, DB_NAME)
+        config['DB_URL'] = "mysql+gaerdbms:///{}?instance={}".format(PROJECT_NAME, instance_name)
     else:
         config['DB_URL'] = "mysql://localhost/<database name>
     } 
