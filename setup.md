@@ -26,22 +26,33 @@ The installer may ask several times.
     1. `$ alembic upgrade head`
 
   1. Set up the database url (includes setup for production database). Make a file `PROJECT_ROOT/pong/config.py` which looks like this:
-
     ```
     import util
-    
-    PROJECT_NAME = <name of Google App Engine project>
-    DB_NAME = <name of cloud SQL instance on Google App Engine>
-    
+
     config = {}
-    
+
+    DB_NAME = <database name>
+    USERNAME = <your name for database access>
+    PASSWORD = <you database access password>
+    DB_IP = <IP address of database>
+    INSTANCE_ID = <cloud SQL instance name, e.g. "google.com:qh-pong:pong">
+
     if util.in_production_mode():
-        instance_name = "google.com:{}:{}".format(PROJECT_NAME, DB_NAME)
-        config['DB_URL'] = "mysql+gaerdbms:///{}?instance={}".format(DB_NAME, instance_name)
+        config['DB_URL'] = "mysql+gaerdbms:///{}?instance={}".format(
+            DB_NAME, INSTANCE_ID)
     else:
         config['DB_URL'] = "mysql://localhost/{}".format(DB_NAME)
-    } 
+
+    # External database access, uncomment for running migrations from local machine
+    # config['DB_URL'] =r"mysql://{}:{}@{}/{}".format(USERNAME, PASSWORD, DB_IP, DB_NAME)
     ```
+    There are three use cases here:
+    1. Running in production mode.
+    1. Running in local dev mode.
+    1. Accessing the production database from your own computer.
+You would do this, for example, when running migrations against the production database from your own computer.
+This is the only case in which the username, password, and IP address are used.
+When doing this uncomment the last line to set `DB_URL` appropriately, and also comment out the `import util` line.
 
 1. Install the Google App Engine python SDK:
   1. Download it from the official site.
