@@ -37,7 +37,7 @@ The installer may ask several times.
     
     if util.in_production_mode():
         instance_name = "google.com:{}:{}".format(PROJECT_NAME, DB_NAME)
-        config['DB_URL'] = "mysql+gaerdbms:///{}?instance={}".format(PROJECT_NAME, instance_name)
+        config['DB_URL'] = "mysql+gaerdbms:///{}?instance={}".format(DB_NAME, instance_name)
     else:
         config['DB_URL'] = "mysql://localhost/<database name>
     } 
