@@ -49,7 +49,7 @@ The installer may ask several times.
 
 1. Run the server
   1. `$ cd PROJECT_ROOT`
-  1. `$ python ~/src/google_appengine/dev_appserver.py .`. Note that you're running the dev server with your virtualenv's python interpreter.
+  1. `$ python ~/path/to/google_appengine/dev_appserver.py .`. Note that you're running the dev server with your virtualenv's python interpreter.
   1. You can now use the pong application at `localhost:8080/users` and `localhost:8080/games/view`.
 
 1. To make a new migration do `$ alembic revision --autogenerate -m "<message>"`
