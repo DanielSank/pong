@@ -25,13 +25,19 @@ class AddGame(wtf.Form):
             return False
 
         ok = True
+
         if self.winner_score.data == self.loser_score.data:
             ok = False
         # Do not accept ties
 
         if not self.winner_score.data - self.loser_score.data >= 2:
             ok = False
-        # Must win by 2
+        # Must win by at least 2
+
+        if self.winner_score.data > 21:
+            if self.winner_score.data - self.loser_score.data != 2:
+                ok = False
+        # If the game went over 21 then it must have been a win by exactly 2.
 
         if self.loser.data == self.winner.data:
             ok = False
