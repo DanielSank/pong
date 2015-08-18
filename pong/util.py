@@ -10,6 +10,12 @@ def user_exists(username, session):
     return session.query(q.exists()).scalar()
 
 
+def user_wins(username, session):
+    """Total number of wins for a user"""
+    return session.query(models.Game).filter(
+        models.Game.winner.has(name=username)).count()
+
+
 def require_login(url, sqla_sessionmaker):
     def require_login_decorator(func):
         def wrapped(self):

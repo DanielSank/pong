@@ -1,8 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
 <table width="100%" class="table table-striped">
-  {% for u in users %}
-    <tr><td>{{ u.name }}</td></tr>
+  <tr>
+    <td><strong>User</strong></td>
+    <td><strong>Total wins</strong></td>
+  </tr>
+  {% for u, w in users %}
+    <tr>
+      <td>{{ u.name }}</td>
+      <td>{{ w }}</td>
+    </tr>
   {% endfor %}
 </table>
 <form method="POST">

@@ -82,9 +82,10 @@ class Users(wa2.RequestHandler):
     def get(self):
         session = Session()
         users = session.query(models.User).all()
+        wins = [util.user_wins(u.name, session) for u in users]
         template = JINJA_ENVIRONMENT.get_template('users.html')
         self.response.write(template.render({
-            'users': users,
+            'users': zip(users, wins),
             'form': forms.AddUser(),
             'logout_url': usersapi.create_logout_url('/users')
         }))
