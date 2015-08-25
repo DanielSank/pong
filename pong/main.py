@@ -90,24 +90,6 @@ class Users(wa2.RequestHandler):
             'logout_url': usersapi.create_logout_url('/users')
         }))
 
-    def post(self):
-        form = forms.AddUser(self.request.POST)
-        if form.validate():
-            username = form.username.data
-            session = Session()
-            results = session.query(models.User).filter(models.User.name==username).all()
-            if not results:
-                user = models.User(name=username)
-                session.add(user)
-                session.commit()
-            else:
-                pass
-                # TODO warn about adding repeated user name
-            return wa2.redirect("/users")
-        else:
-            # TODO: pop up an error message
-            return wa2.redirect("/users")
-
 
 class Error(wa2.RequestHandler):
     def get(self):
