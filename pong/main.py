@@ -29,7 +29,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 
 class ViewGames(wa2.RequestHandler):
-    @util.require_login('/games/view', Session)
+    @util.require_login(Session)
     def get(self):
         session = Session()
         games = session.query(models.Game).all()
@@ -44,7 +44,7 @@ class ViewGames(wa2.RequestHandler):
 
 class AddGame(wa2.RequestHandler):
 
-    @util.require_login('/games/add', Session)
+    @util.require_login(Session)
     def get(self):
         session = Session()
         players = [u.name for u in session.query(models.User).all()]
@@ -78,7 +78,7 @@ class AddGame(wa2.RequestHandler):
 
 
 class Users(wa2.RequestHandler):
-    @util.require_login('/users', Session)
+    @util.require_login(Session)
     def get(self):
         session = Session()
         users = session.query(models.User).all()

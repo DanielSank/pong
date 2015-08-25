@@ -16,19 +16,19 @@ def user_wins(username, session):
         models.Game.winner.has(name=username)).count()
 
 
-def require_login(url, sqla_sessionmaker):
+def require_login(sqla_sessionmaker):
     def require_login_decorator(func):
-        def wrapped(self):
+        def wrapped(self, *args, **kw):
             user = usersapi.get_current_user()
             if user:
                 nickname = user.email().split('@')[0]
                 if user_exists(nickname, sqla_sessionmaker()):
-                    func(self)
+                    func(self, *args, **kw)
                 else:
                     # TODO: Deal with unallowed user
                     self.response.write("Hi, {}! You are not a registered user :(".format(nickname))
             else:
-                return wa2.redirect(usersapi.create_login_url(url))
+                return wa2.redirect(usersapi.create_login_url(self.request.path))
         return wrapped
     return require_login_decorator
 
