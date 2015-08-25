@@ -46,7 +46,7 @@ def elo(rating_a, rating_b, score_a, score_b, scale=100, base=10, k_func=k):
     discussed how to recalculate them as new information comes in, i.e. as new
     games are played. In fact, the elo system refers to both the rank itself and
     the update system. Given the score of a new game, we compute a player's
-    point actual scored point fraction S, and incriment that player's rank by
+    point actual scored point fraction S, and increment that player's rank by
         k (S - E)
     where E is that player's expected point fraction for the game and k is a
     a value describing our willingness to update that player's rank. k could be
@@ -92,3 +92,38 @@ def elo(rating_a, rating_b, score_a, score_b, scale=100, base=10, k_func=k):
 
     return new_rating_a, new_rating_b
 
+
+def compute_ratings(games, init=500, elo_kwds={}):
+    """Compute historical ratings from a sequence of games.
+
+    Args:
+        games (list((str, float), (str, float))): The sequence of games
+            in order they were played. Each game is a tuple of tuples
+            (name, score) for player A, and (name, score) for player B.
+        init (float): The initial rating given to a player who has not
+            yet played any games. This number is arbitrary because only
+            _differences_ in ranking matter, but we default to a
+            psychologically neutral value of 500.
+        elo_kwds (dict): additional keyword arguments passed to the elo
+            func to control its behavior, for example to change the k_func.
+
+    Returns list((float, float), (float, float)):
+        List of final rankings and ranking changes after each game. Each
+        entry gives (rating, delta) for player A and (rating, delta) for
+        player B, in the same order the players were listed in the games
+        array for that game. 
+    """
+    current_ratings = {}
+    history = []
+    for (name_a, score_a), (name_b, score_b) in games:
+        rating_a = current_ratings.setdefault(name_a, init)
+        rating_b = current_ratings.setdefault(name_b, init)
+        new_rating_a, new_rating_b = elo(rating_a, rating_b, score_a, score_b,
+                                         **elo_kwds)
+        current_ratings.update({
+            name_a: new_rating_a,
+            name_b: new_rating_b
+        })
+        history.append(((new_rating_a, new_rating_a - rating_a),
+                        (new_rating_b, new_rating_b - rating_b)))
+    return current_ratings, history

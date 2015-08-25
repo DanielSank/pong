@@ -98,28 +98,46 @@ class Ratings(wa2.RequestHandler):
         session = Session()
         users = session.query(models.User).all()
         games = session.query(models.Game).all()
-        ratings = dict((user.name, 500) for user in users)
-        for g in games:
-            r_winner = ratings[g.winner.name]
-            r_loser = ratings[g.loser.name]
-            g.winner_prev_rating = int(r_winner)
-            g.loser_prev_rating = int(r_loser)
-            r_winner, r_loser = elo.elo(r_winner, r_loser, g.winner_score + 11, g.loser_score)
-            ratings[g.winner.name] = r_winner
-            ratings[g.loser.name] = r_loser
-            g.winner_new_rating = int(r_winner)
-            g.loser_new_rating = int(r_loser)
+
+        init = 500
+
+        # point-spread (ps) ratings
+        ps_ratings, ps_history = elo.compute_ratings(
+            [((g.winner.name, g.winner_score), (g.loser.name, g.loser_score))
+             for g in games],
+            init=init)
+
+        # win-loss (wl) ratings
+        wl_ratings, wl_history = elo.compute_ratings(
+            [((g.winner.name, 1), (g.loser.name, 0))
+             for g in games],
+            init=init)
+
+        for g, ps, wl in zip(games, ps_history, wl_history):
+            ((ps_r_w, ps_dr_w), (ps_r_l, ps_dr_l)) = ps
+            ((wl_r_w, wl_dr_w), (wl_r_l, wl_dr_l)) = wl
+            g.winner_ps_rating = int(ps_r_w)
+            g.loser_ps_rating = int(ps_r_l)
+            g.winner_wl_rating = int(wl_r_w)
+            g.loser_wl_rating = int(wl_r_l)
             def with_sign(n):
                 return ('+' if n >= 0 else '') + str(n)
-            g.winner_move = with_sign(g.winner_new_rating - g.winner_prev_rating)
-            g.loser_move = with_sign(g.loser_new_rating - g.loser_prev_rating)
-        leader_board = reversed(sorted((int(ratings[u.name]), u.name)
-                                       for u in users))
+            g.winner_ps_move = with_sign(int(ps_dr_w))
+            g.loser_ps_move = with_sign(int(ps_dr_l))
+            g.winner_wl_move = with_sign(int(wl_dr_w))
+            g.loser_wl_move = with_sign(int(wl_dr_l))
+
+        ps_leader_board = reversed(sorted((int(ps_ratings.get(u.name, init)), u.name)
+                                          for u in users))
+        wl_leader_board = reversed(sorted((int(wl_ratings.get(u.name, init)), u.name)
+                                          for u in users))
+
         template = JINJA_ENVIRONMENT.get_template('ratings.html')
         self.response.write(
             template.render({
                 'games': games,
-                'leader_board': leader_board,
+                'ps_leader_board': ps_leader_board,
+                'wl_leader_board': wl_leader_board,
                 'logout_url': usersapi.create_logout_url(self.request.path)
             })
         )

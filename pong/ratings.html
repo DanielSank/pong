@@ -1,12 +1,30 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Ratings Leader Board</h1>
+<h1>Ratings Leader Boards</h1>
+
+<h2>Point Spread</h2>
+<p>Based on the number of points scored by each player in a game.</p>
 <table width="100%" class="table table-striped">
   <tr>
     <th>player</th>
     <th>rating</th>
   </tr>
-  {% for rating, player in leader_board %}
+  {% for rating, player in ps_leader_board %}
+    <tr>
+      <td>{{ player }}</td>
+      <td>{{ rating }}</td>
+    </tr>
+  {% endfor %}
+</table>
+
+<h2>Win/Loss</h2>
+<p>Based on which player won or lost each game.</p>
+<table width="100%" class="table table-striped">
+  <tr>
+    <th>player</th>
+    <th>rating</th>
+  </tr>
+  {% for rating, player in wl_leader_board %}
     <tr>
       <td>{{ player }}</td>
       <td>{{ rating }}</td>
@@ -27,8 +45,14 @@
       <td>{{ g.date }}</td>
       <td>{{ g.winner.name }} vs {{ g.loser.name }}</td>
       <td>{{ g.winner_score }} - {{ g.loser_score }}</td>
-      <td>{{ g.winner.name }}: {{ g.winner_new_rating }} ({{ g.winner_move }})</td>
-      <td>{{ g.loser.name }}: {{ g.loser_new_rating }} ({{g.loser_move}})</td>
+      <td>{{ g.winner.name }}:
+        ps={{ g.winner_ps_rating }} ({{ g.winner_ps_move }}),
+        wl={{ g.winner_wl_rating }} ({{ g.winner_wl_move }})
+      </td>
+      <td>{{ g.loser.name }}:
+        ps={{ g.loser_ps_rating }} ({{ g.loser_ps_move }}),
+        wl={{ g.loser_wl_rating }} ({{ g.loser_wl_move }})
+      </td>
     </tr>
   {% endfor %}
 </table>
