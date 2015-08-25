@@ -127,10 +127,8 @@ class Ratings(wa2.RequestHandler):
             g.winner_wl_move = with_sign(int(wl_dr_w))
             g.loser_wl_move = with_sign(int(wl_dr_l))
 
-        ps_leader_board = reversed(sorted((int(ps_ratings.get(u.name, init)), u.name)
-                                          for u in users))
-        wl_leader_board = reversed(sorted((int(wl_ratings.get(u.name, init)), u.name)
-                                          for u in users))
+        ps_leader_board = reversed(sorted((int(r), name) for name, r in ps_ratings.items()))
+        wl_leader_board = reversed(sorted((int(r), name) for name, r in wl_ratings.items()))
 
         template = JINJA_ENVIRONMENT.get_template('ratings.html')
         self.response.write(
