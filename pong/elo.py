@@ -107,11 +107,12 @@ def compute_ratings(games, init=500, elo_kwds={}):
         elo_kwds (dict): additional keyword arguments passed to the elo
             func to control its behavior, for example to change the k_func.
 
-    Returns list((float, float), (float, float)):
-        List of final rankings and ranking changes after each game. Each
-        entry gives (rating, delta) for player A and (rating, delta) for
-        player B, in the same order the players were listed in the games
-        array for that game. 
+    Returns dict(str, float), list((float, float), (float, float)):
+        Dictionary giving the current rankings indexed by player name, and
+        list of final rankings and ranking changes after each game. Each
+        entry in the list gives (rating, delta) for player A and
+        (rating, delta) for player B, in the same order the players were
+        listed in the games array for that game.
     """
     current_ratings = {}
     history = []
