@@ -36,20 +36,23 @@
 <table width="100%" class="table table-striped">
   <tr>
     <th>date</th>
-    <th>matchup</th>
-    <th>score</th>
-    <th colspan="2">movements</th>
+    <th class="text-right">movements</th>
+    <th class="text-right">player</th>
+    <th class="text-center">score</th>
+    <th class="text-left">player</th>
+    <th class="text-left">movements</th>
   </tr>
   {% for g in games %}
     <tr>
       <td>{{ g.date }}</td>
-      <td>{{ g.winner.name }} vs {{ g.loser.name }}</td>
-      <td>{{ g.winner_score }} - {{ g.loser_score }}</td>
-      <td>{{ g.winner.name }}:
-        ps={{ g.winner_ps_rating }} ({{ g.winner_ps_move }}),
-        wl={{ g.winner_wl_rating }} ({{ g.winner_wl_move }})
+      <td class="text-right">
+          ps={{ g.winner_ps_rating }} ({{ g.winner_ps_move }}),
+          wl={{ g.winner_wl_rating }} ({{ g.winner_wl_move }})
       </td>
-      <td>{{ g.loser.name }}:
+      <td class="text-right">{{ g.winner.name }}</td>
+      <td class="text-center">{{ g.winner_score }} - {{ g.loser_score }}</td>
+      <td class="text-left">{{ g.loser.name }}</td>
+      <td class="text-left">
         ps={{ g.loser_ps_rating }} ({{ g.loser_ps_move }}),
         wl={{ g.loser_wl_rating }} ({{ g.loser_wl_move }})
       </td>
