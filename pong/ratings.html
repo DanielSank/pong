@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
+
+{% from 'macros.html' import userlink %}
+
 <h1>Ratings Leader Boards</h1>
 
 <h2>Point Spread</h2>
@@ -11,7 +14,7 @@
   </tr>
   {% for rating, player in ps_leader_board %}
     <tr>
-      <td>{{ player }}</td>
+      <td>{{ userlink(player) }}</td>
       <td>{{ rating }}</td>
     </tr>
   {% endfor %}
@@ -26,7 +29,7 @@
   </tr>
   {% for rating, player in wl_leader_board %}
     <tr>
-      <td>{{ player }}</td>
+      <td>{{ userlink(player) }}</td>
       <td>{{ rating }}</td>
     </tr>
   {% endfor %}
@@ -49,9 +52,9 @@
           ps={{ g.winner_ps_rating }} ({{ g.winner_ps_move }}),
           wl={{ g.winner_wl_rating }} ({{ g.winner_wl_move }})
       </td>
-      <td class="text-right">{{ g.winner.name }}</td>
+      <td class="text-right">{{ userlink(g.winner.name) }}</td>
       <td class="text-center">{{ g.winner_score }} - {{ g.loser_score }}</td>
-      <td class="text-left">{{ g.loser.name }}</td>
+      <td class="text-left">{{ userlink(g.loser.name) }}</td>
       <td class="text-left">
         ps={{ g.loser_ps_rating }} ({{ g.loser_ps_move }}),
         wl={{ g.loser_wl_rating }} ({{ g.loser_wl_move }})

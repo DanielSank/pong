@@ -37,7 +37,7 @@ class ViewGames(wa2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('view_games.html')
         self.response.write(
             template.render(
-                {'games': games,
+                {'games': reversed(games),
                  'logout_url': usersapi.create_logout_url('/games')}
             )
         )
@@ -133,12 +133,61 @@ class Ratings(wa2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('ratings.html')
         self.response.write(
             template.render({
-                'games': games,
+                'games': reversed(games),
                 'ps_leader_board': ps_leader_board,
                 'wl_leader_board': wl_leader_board,
                 'logout_url': usersapi.create_logout_url(self.request.path)
             })
         )
+
+
+class User(wa2.RequestHandler):
+    @util.require_login(Session)
+    def get(self, name):
+        session = Session()
+        username = name
+        user = session.query(models.User).filter(models.User.name==username).one()
+        games = session.query(models.Game).filter(sa.or_(
+            models.Game.winner==user,
+            models.Game.loser==user)).all()
+
+        matchup_data = {}  # opponent name -> data
+        total_points = 0
+
+        for game in games:
+            opponent = game.loser_name if game.winner_name == username else game.winner_name
+            d = matchup_data.setdefault(opponent, {
+                'games_won': 0,
+                'games_lost': 0,
+                'points_won': 0,
+                'points_lost': 0})
+            if game.winner_name == username:
+                game_win_loss_key = 'games_won'
+                points_won_key = 'winner_score'
+                points_lost_key = 'loser_score'
+            else:
+                game_win_loss_key = 'games_lost'
+                points_won_key = 'loser_score'
+                points_lost_key = 'winner_score'
+
+            d[game_win_loss_key] += 1
+            d['points_won'] += getattr(game, points_won_key)
+            d['points_lost'] += getattr(game, points_lost_key)
+            total_points += getattr(game, points_won_key)
+
+        matchup_data = [(opponent, (d['games_won'],
+                                    d['games_lost'],
+                                    d['points_won'],
+                                    d['points_lost']))
+                        for opponent, d in matchup_data.items()]
+        template = JINJA_ENVIRONMENT.get_template('user.html')
+        self.response.write(
+            template.render({
+                'user_name': username,
+                'total_games': len(games),
+                'total_wins': sum(x[1][0] for x in matchup_data),
+                'total_points': total_points,
+                'matchup_data': matchup_data}))
 
 
 class Error(wa2.RequestHandler):
@@ -148,6 +197,7 @@ class Error(wa2.RequestHandler):
 
 application = wa2.WSGIApplication([
     ('/users', Users),
+    wa2.Route('/users/<name>', handler=User),
     ('/games/add', AddGame),
     ('/games', ViewGames),
     ('/games/view', ViewGames),

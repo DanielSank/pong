@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% from 'macros.html' import userlink %}
+
+<h1>{{ user_name }}</h1>
+
+<table class="table table-striped">
+  <tr>
+    <th>Opponent</th>
+    <th>Games won:lost</th>
+    <th>Points won:lost</th>
+  </tr>
+  {% for other_player, (wins, losses, points_won, points_lost) in matchup_data %}
+  <tr>
+    <td>{{ userlink(other_player) }}</td>
+    <td>{{ wins }}:{{ losses }} ({{ (100 * wins / (wins+losses))|int }}%)</td>
+    <td>{{ points_won }}:{{ points_lost }} ({{ (100 * points_won / (points_won + points_lost))|int }}%)</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<div><strong>Games played: </strong>{{ total_games }}</div>
+<div><strong>Games won: </strong>{{ total_wins }}</div>
+<div><strong>Points scored: </strong>{{ total_points }}</div>
+
+{% endblock %}

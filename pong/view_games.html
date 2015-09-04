@@ -1,11 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
+
+{% from 'macros.html' import userlink %}
+
 <p></p>
 <table width="100%" class="table table-striped">
   {% for g in games %}
     <tr>
-      <td>{{ g.winner.name }}: {{ g.winner_score }}</td>
-      <td>{{ g.loser.name }}: {{ g.loser_score }}</td>
+      <td>{{ userlink(g.winner.name) }}: {{ g.winner_score }}</td>
+      <td>{{ userlink(g.loser.name) }}: {{ g.loser_score }}</td>
       <td>{{ g.date }}</td>
     </tr>
   {% endfor %}
