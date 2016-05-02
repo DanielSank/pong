@@ -10,7 +10,7 @@
 
 1. Install mysql server: `$ sudo apt-get install mysql-server`.
 We recommend not setting a root password on your local server as this simplifies your development work flow.
-However, if you don't set password don't mysql server listen on open the internet.
+However, if you don't set a password then don't let mysql server listen on open the internet.
 To set up mysql server without a password, when asked for a root password during installation just leave it blank and hit enter.
 The installer may ask several times.
 
