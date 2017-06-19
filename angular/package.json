@@ -1,5 +1,5 @@
 {
-  "name": "Ping-pong scoreboard",
+  "name": "pong-angular",
   "version": "0.1.0",
   "description": "Ping-pong scoreboard as a test of Angular compared to other platforms",
   "scripts": {
