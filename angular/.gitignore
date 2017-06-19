@@ -1,1 +1,5 @@
 node_modules/
+
+# sources are typescript; ignore compiled js
+src/**/*.js
+src/**/*.js.map
