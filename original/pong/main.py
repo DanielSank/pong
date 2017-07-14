@@ -29,18 +29,24 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 )
 
 
+class Home(wa2.RequestHandler):
+    @util.require_login(Session)
+    def get(self):
+        return wa2.redirect('/users')
+
+
 class ViewGames(wa2.RequestHandler):
     @util.require_login(Session)
     def get(self):
         session = Session()
         games = session.query(models.Game).all()
         template = JINJA_ENVIRONMENT.get_template('view_games.html')
-        self.response.write(
-            template.render(
-                {'games': reversed(games),
-                 'logout_url': usersapi.create_logout_url('/games')}
-            )
-        )
+        content = template.render({
+            'games': reversed(games),
+            'logout_url': usersapi.create_logout_url('/games'),
+            'is_admin_user': usersapi.is_current_user_admin()
+        })
+        self.response.write(content)
 
 
 class AddGame(wa2.RequestHandler):
@@ -51,12 +57,12 @@ class AddGame(wa2.RequestHandler):
         players = [u.name for u in session.query(models.User).all()]
         form = forms.AddGame(formdata=None, players=players)
         template = JINJA_ENVIRONMENT.get_template('add_game.html')
-        self.response.write(
-            template.render(
-                {'form': form,
-                'logout_url': usersapi.create_logout_url('/games')}
-            )
-        )
+        content = template.render({
+            'form': form,
+            'logout_url': usersapi.create_logout_url('/games'),
+            'is_admin_user': usersapi.is_current_user_admin()
+        })
+        self.response.write(content)
 
     def post(self):
         session = Session()
@@ -85,11 +91,25 @@ class Users(wa2.RequestHandler):
         users = session.query(models.User).all()
         wins = [util.user_wins(u.name, session) for u in users]
         template = JINJA_ENVIRONMENT.get_template('users.html')
-        self.response.write(template.render({
+        content = template.render({
             'users': zip(users, wins),
             'form': forms.AddUser(),
-            'logout_url': usersapi.create_logout_url('/users')
-        }))
+            'logout_url': usersapi.create_logout_url('/users'),
+            'is_admin_user': usersapi.is_current_user_admin()
+        })
+        self.response.write(content)
+
+    def post(self):
+        form = forms.AddUser(formdata=self.request.POST)
+        if form.validate():
+            print("FORM VALID")
+            session = Session()
+            user = models.User(name=form.username.data)
+            session.add(user)
+            session.commit()
+        else:
+            print("FORM INVALID")
+        return wa2.redirect(self.request.path)
 
 
 class Ratings(wa2.RequestHandler):
@@ -131,14 +151,14 @@ class Ratings(wa2.RequestHandler):
         wl_leader_board = reversed(sorted((int(r), name) for name, r in wl_ratings.items()))
 
         template = JINJA_ENVIRONMENT.get_template('ratings.html')
-        self.response.write(
-            template.render({
-                'games': reversed(games),
-                'ps_leader_board': ps_leader_board,
-                'wl_leader_board': wl_leader_board,
-                'logout_url': usersapi.create_logout_url(self.request.path)
-            })
-        )
+        content = template.render({
+            'games': reversed(games),
+            'ps_leader_board': ps_leader_board,
+            'wl_leader_board': wl_leader_board,
+            'logout_url': usersapi.create_logout_url(self.request.path),
+            'is_admin_user': usersapi.is_current_user_admin()
+        })
+        self.response.write(content)
 
 
 class User(wa2.RequestHandler):
@@ -181,13 +201,31 @@ class User(wa2.RequestHandler):
                                     d['points_lost']))
                         for opponent, d in matchup_data.items()]
         template = JINJA_ENVIRONMENT.get_template('user.html')
-        self.response.write(
-            template.render({
-                'user_name': username,
-                'total_games': len(games),
-                'total_wins': sum(x[1][0] for x in matchup_data),
-                'total_points': total_points,
-                'matchup_data': matchup_data}))
+        content = template.render({
+            'user_name': username,
+            'total_games': len(games),
+            'total_wins': sum(x[1][0] for x in matchup_data),
+            'total_points': total_points,
+            'matchup_data': matchup_data,
+            'logout_url': usersapi.create_logout_url(self.request.path),
+            'is_admin_user': usersapi.is_current_user_admin()
+        })
+        self.response.write(content)
+
+
+class UserDel(wa2.RequestHandler):
+
+    def post(self, name):
+        form = forms.DelUser(formdata=self.request.POST)
+        if form.validate():
+            print("FORM VALID")
+            session = Session()
+            user = session.query(models.User).filter(models.User.name==name).one()
+            session.delete(user)
+            session.commit()
+        else:
+            print("FORM INVALID")
+        return wa2.redirect("/users")
 
 
 class Error(wa2.RequestHandler):
@@ -196,8 +234,10 @@ class Error(wa2.RequestHandler):
 
 
 application = wa2.WSGIApplication([
+    ('/', Home),
     ('/users', Users),
     wa2.Route('/users/<name>', handler=User),
+    wa2.Route('/users/<name>/del', handler=UserDel),
     ('/games/add', AddGame),
     ('/games', ViewGames),
     ('/games/view', ViewGames),

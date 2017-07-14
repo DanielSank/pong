@@ -20,15 +20,21 @@ def require_login(sqla_sessionmaker):
     def require_login_decorator(func):
         def wrapped(self, *args, **kw):
             user = usersapi.get_current_user()
-            if user:
-                nickname = user.email().split('@')[0]
-                if user_exists(nickname, sqla_sessionmaker()):
-                    func(self, *args, **kw)
-                else:
-                    # TODO: Deal with unallowed user
-                    self.response.write("Hi, {}! You are not a registered user :(".format(nickname))
-            else:
+            if not user:
                 return wa2.redirect(usersapi.create_login_url(self.request.path))
+            nickname = user.email().split('@')[0]
+            if (usersapi.is_current_user_admin() or
+                user_exists(nickname, sqla_sessionmaker())):
+                return func(self, *args, **kw)
+            else:
+                # TODO: Deal with unallowed user
+                self.response.write("""
+                    <html>
+                    <body>
+                        <p>Hi, {}! You are not a registered user :(</p>
+                        <p><a href="{}">logout</a></p>
+                    </body>
+                """.format(nickname, usersapi.create_logout_url(self.request.path)))
         return wrapped
     return require_login_decorator
 
