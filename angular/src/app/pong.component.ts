@@ -5,7 +5,7 @@ import { Player } from './player';
 
 
 @Component({
-  selector: 'my-app',
+  selector: 'pong',
   styles: [`
     .selected {
       background-color: #CFD8DC !important;
@@ -70,7 +70,7 @@ import { Player } from './player';
     `,
   providers: [PongService]
 })
-export class AppComponent implements OnInit {
+export class PongComponent implements OnInit {
   title = "Pong";
   players: Player[];
   selectedPlayer: Player;
