@@ -4,6 +4,8 @@ import { FormsModule }   from '@angular/forms';
 
 import { AppComponent }  from './app.component';
 import { PlayerDetailComponent } from './player-detail.component';
+import { PongComponent } from './pong.component';
+import { PongService } from '.pong.service';
 
 @NgModule({
   imports: [
@@ -11,7 +13,11 @@ import { PlayerDetailComponent } from './player-detail.component';
     FormsModule],
   declarations: [
     AppComponent,
-    PlayerDetailComponent],
+    PlayerDetailComponent,
+    PongComponent],
+  providers: [
+    PongService
+  ],
   bootstrap:    [ AppComponent ]
 })
 export class AppModule { }

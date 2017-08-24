@@ -56,7 +56,6 @@ import { Player } from './player';
     }
     `],
   template: `
-    <h1>{{title}}</h1>
     <ul class="players">
       <li *ngFor="let player of players"
           [class.selected]="player === selectedPlayer"
@@ -71,7 +70,6 @@ import { Player } from './player';
   providers: [PongService]
 })
 export class PongComponent implements OnInit {
-  title = "Pong";
   players: Player[];
   selectedPlayer: Player;
 
