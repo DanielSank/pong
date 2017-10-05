@@ -1,14 +1,15 @@
-application: google.com:qh-pong
-version: 1
-runtime: python27
 api_version: 1
+application: google.com:qh-pong
+runtime: python27
 threadsafe: false
+version: 1
 
 handlers:
 - url: /stylesheets
   static_dir: stylesheets
 - url: /.*
   script: pong.main.application
+
 libraries:
 - name: webapp2
   version: latest
@@ -17,3 +18,6 @@ libraries:
 - name: MySQLdb
   version: latest
 
+env_variables:
+  INSTANCE_CONNECTION_NAME: "google.com:qh-pong:pong"
+  CLOUD_SQL_USER: "root"
