@@ -8,7 +8,7 @@ from logging.config import fileConfig
 config = context.config
 
 # Get the full database url
-import pong.config as myconfig
+import sqlemon
 config.set_main_option(
         'sqlalchemy.url',
         sqlemon.get_sqlalchemy_url_for_client(
