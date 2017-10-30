@@ -19,5 +19,5 @@ libraries:
   version: latest
 
 env_variables:
-  INSTANCE_CONNECTION_NAME: "google.com:qh-pong:pong"
+  INSTANCE_CONNECTION_NAME: "google.com:qh-pong:us-west1:pong2nd"
   CLOUD_SQL_USER: "root"
