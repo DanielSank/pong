@@ -1,26 +1,24 @@
-import sys
 import os
-import config as C
 import datetime
+
+import google.appengine.api.users as usersapi
+import jinja2
+import sqlalchemy as sa
+import sqlalchemy.orm as orm
+import sqlemon
+import webapp2 as wa2
+
+import pong.elo as elo
+import pong.forms as forms
+import pong.models as models
+import secrets
+import pong.util as util
 
 
 # sqlalchemy session
-import sqlalchemy as sa
-import sqlalchemy.orm as orm
-engine = sa.create_engine(C.config['DB_URL'], echo=False)
-Session = orm.sessionmaker(bind=engine)
-
-
-import elo
-import models as models
-import forms
-import util
-
-
-import jinja2
-import webapp2 as wa2
-import google.appengine.api.users as usersapi
-
+session_maker = sqlemon.get_sessionmaker(
+        'pong',
+        secrets.CLOUD_SQL_PASSWORD)
 
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -30,15 +28,15 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 
 class Home(wa2.RequestHandler):
-    @util.require_login(Session)
+    @util.require_login(session_maker)
     def get(self):
         return wa2.redirect('/users')
 
 
 class ViewGames(wa2.RequestHandler):
-    @util.require_login(Session)
+    @util.require_login(session_maker)
     def get(self):
-        session = Session()
+        session = session_maker()
         games = session.query(models.Game).all()
         template = JINJA_ENVIRONMENT.get_template('view_games.html')
         content = template.render({
@@ -51,9 +49,9 @@ class ViewGames(wa2.RequestHandler):
 
 class AddGame(wa2.RequestHandler):
 
-    @util.require_login(Session)
+    @util.require_login(session_maker)
     def get(self):
-        session = Session()
+        session = session_maker()
         players = [u.name for u in session.query(models.User).all()]
         form = forms.AddGame(formdata=None, players=players)
         template = JINJA_ENVIRONMENT.get_template('add_game.html')
@@ -65,12 +63,12 @@ class AddGame(wa2.RequestHandler):
         self.response.write(content)
 
     def post(self):
-        session = Session()
+        session = session_maker()
         usernames = [u.name for u in session.query(models.User).all()]
         form = forms.AddGame(formdata=self.request.POST, players=usernames)
         if form.validate():
             print("FORM VALID")
-            session = Session()
+            session = session_maker()
             game = models.Game(
                 winner_name=form.winner.data,
                 loser_name=form.loser.data,
@@ -85,9 +83,9 @@ class AddGame(wa2.RequestHandler):
 
 
 class Users(wa2.RequestHandler):
-    @util.require_login(Session)
+    @util.require_login(session_maker)
     def get(self):
-        session = Session()
+        session = session_maker()
         users = session.query(models.User).all()
         wins = [util.user_wins(u.name, session) for u in users]
         template = JINJA_ENVIRONMENT.get_template('users.html')
@@ -103,7 +101,7 @@ class Users(wa2.RequestHandler):
         form = forms.AddUser(formdata=self.request.POST)
         if form.validate():
             print("FORM VALID")
-            session = Session()
+            session = session_maker()
             user = models.User(name=form.username.data)
             session.add(user)
             session.commit()
@@ -113,9 +111,9 @@ class Users(wa2.RequestHandler):
 
 
 class Ratings(wa2.RequestHandler):
-    @util.require_login(Session)
+    @util.require_login(session_maker)
     def get(self):
-        session = Session()
+        session = session_maker()
         users = session.query(models.User).all()
         games = session.query(models.Game).all()
 
@@ -162,9 +160,9 @@ class Ratings(wa2.RequestHandler):
 
 
 class User(wa2.RequestHandler):
-    @util.require_login(Session)
+    @util.require_login(session_maker)
     def get(self, name):
-        session = Session()
+        session = session_maker()
         username = name
         user = session.query(models.User).filter(models.User.name==username).one()
         games = session.query(models.Game).filter(sa.or_(
@@ -219,7 +217,7 @@ class UserDel(wa2.RequestHandler):
         form = forms.DelUser(formdata=self.request.POST)
         if form.validate():
             print("FORM VALID")
-            session = Session()
+            session = session_maker()
             user = session.query(models.User).filter(models.User.name==name).one()
             session.delete(user)
             session.commit()
@@ -243,4 +241,4 @@ application = wa2.WSGIApplication([
     ('/games/view', ViewGames),
     ('/ratings', Ratings),
     ('/error', Error)
-], debug=not util.in_production_mode())
+], debug=not sqlemon.production_mode())
