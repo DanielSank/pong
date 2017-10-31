@@ -18,6 +18,7 @@ import pong.util as util
 # sqlalchemy session
 session_maker = sqlemon.get_sessionmaker(
         'pong',
+        None,
         secrets.CLOUD_SQL_PASSWORD)
 
 JINJA_ENVIRONMENT = jinja2.Environment(
