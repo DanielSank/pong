@@ -1,8 +1,6 @@
 api_version: 1
-application: google.com:qh-pong
 runtime: python27
 threadsafe: false
-version: 1
 
 handlers:
 - url: /stylesheets
