@@ -14,6 +14,8 @@ import pong.models as models
 import secrets
 import pong.util as util
 
+import pong.models_datastore as models_datastore
+
 
 # sqlalchemy session
 session_maker = sqlemon.get_sessionmaker(
@@ -37,8 +39,7 @@ class Home(wa2.RequestHandler):
 class ViewGames(wa2.RequestHandler):
     @util.require_login(session_maker)
     def get(self):
-        session = session_maker()
-        games = session.query(models.Game).all()
+        games_query = models_datastore.query()
         template = JINJA_ENVIRONMENT.get_template('view_games.html')
         content = template.render({
             'games': reversed(games),
@@ -52,8 +53,7 @@ class AddGame(wa2.RequestHandler):
 
     @util.require_login(session_maker)
     def get(self):
-        session = session_maker()
-        players = [u.name for u in session.query(models.User).all()]
+        players = [u.name for u in models_datastore.User.query()]
         form = forms.AddGame(formdata=None, players=players)
         template = JINJA_ENVIRONMENT.get_template('add_game.html')
         content = template.render({
@@ -64,13 +64,11 @@ class AddGame(wa2.RequestHandler):
         self.response.write(content)
 
     def post(self):
-        session = session_maker()
-        usernames = [u.name for u in session.query(models.User).all()]
+        usernames = [u.name for u in models_datastore.User.query()]
         form = forms.AddGame(formdata=self.request.POST, players=usernames)
         if form.validate():
             print("FORM VALID")
-            session = session_maker()
-            game = models.Game(
+            game = models_datastore.Game(
                 winner_name=form.winner.data,
                 loser_name=form.loser.data,
                 winner_score=form.winner_score.data,

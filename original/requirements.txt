@@ -1,5 +1,4 @@
 alembic
-ipython
 PyMySQL
 pyyaml
 sqlalchemy
